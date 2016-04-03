@@ -124,8 +124,11 @@ git pull origin master
 "
 	"기타
 1. git log --graph --oneline : 변경 이력 흐름을 선으로 된 그림으로 보기
-
 2. gtk : 변경 이력을 GUI 툴로 보여준다.
+3. git rm <file> : 로컬 저장소에서 삭제한 파일을 반영하기
+4. git checkout <file> : 해당 파일에 대한 이력관리를 추적하지 않음.
+
+
 "
 네트워크 동작 관련	"1. iwconfig를 통해 무선랜 인터페이스를 알아낸다.
  - 또는 nmcli device status(NetworkManager가 실행중이지 않으면 안먹음)
