@@ -1,0 +1,37 @@
+dbus 서비스 등록 방법
+아래의 서비스 파일을 작성하여
+vi es.aleksander.Alarm.service
+
+[D-BUS Service]
+Name=es.aleksander.Alarm
+Exec=/usr/bin/Hello
+
+아래 경로에 둔다.
+/usr/share/dbus-1/services/es.aleksander.Alarm.service
+
+동작을 확인하는 명령
+dbus-send --session --print-reply --dest=es.aleksander.Alarm /es/aleksander/Alarm es.aleksander.Alarm.Configure uint32:10
+
+
+관련 프로그램
+d-feet : session, system dbus에 등록된 인터페이스를 확인하고 테스트해볼 수 있는 툴(설치 필요함)
+dbus-monitor --session : 세션 버스를 모니터링할 수 있다.
+
+* 참조
+https://dbus.freedesktop.org/doc/system-activation.txt
+http://kkaempf.blogspot.kr/2009/03/d-bus-service-on-demand.html
+
+
+
+GUI debugger : nemiver
+
+
+* GIO manual
+https://developer.gnome.org/gio/stable/
+
+* GDBUS sample
+https://github.com/bratsche/glib/tree/master/gio/tests
+
+
+
+

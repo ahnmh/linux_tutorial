@@ -1,0 +1,105 @@
+파일 아카이브
+- 아카이브 : 파일을 묶어서 하나로 만드는 것.
+c: 아카이브 생성
+t: 아카이브 내용 출력
+x: 아카이브에서 원본 파일을 추출
+r: 새로운 파일을 추가
+u: 수정된 파일을 업데이트
+
+v: 처리하고 있는 파일의 정보를 출력
+f: 아카이브 파일을 지정함.
+j: 
+z: 
+
+아카이브 생성
+tar cvf <아카이브 파일.tar> <파일 이름>
+
+아카이브 내용 보기 - 압축되었더라도 원본이 tar인 경우 동작한다.
+tar tvf <아카이브 파일.tar>
+
+아카이브 풀기
+tar xvf <아카이브 파일.tar>
+
+아카이브 업데이트하기
+일부 내용만 수정된 상태에서는 uvf를 사용해서 해당 파일만 업데이트한다.
+신규 파일이 추가된 경우 해당 파일만 아카이브에 새로 추가한다.
+ahnmh@ahnmh-samsung-iot:~/temp$ touch cmdlist
+ahnmh@ahnmh-samsung-iot:~$ tar uvf temp.tar temp
+temp/cmdlist
+
+아카이브 + 압축 적용
+- gzip으로 압축하는 경우 z옵션을 사용한다.
+tar cvzf <아카이브 파일.tar.gz> <파일 이름>
+- bzip2으로 압축하는 경우 j옵션을 사용한다.
+tar cvjf <아카이브 파일.tar.bz2> <파일 이름>
+
+
+gzip 압축하기
+gzip -l <압축된 파일> : 압축된 파일의 정보를 보여줌
+ahnmh@ahnmh-samsung-iot:~$ gzip -l result.dat.gz 
+         compressed        uncompressed  ratio uncompressed_name
+                444                1776  76.6% result.dat
+
+압축 정보 화면에 출력
+gzip -v temp.tar
+temp.tar:	 21.1% -- replaced with temp.tar.gz
+ahnmh@ahnmh-samsung-iot:~$ 
+
+압축 해제
+zip -d temp.tar.gz 
+
+압축 파일의 내용 보기
+zcat <압축 파일 이름>
+
+압축 푸는 다른 명렴
+gunzip <압축 파일 이름>
+
+
+
+bzip2 압축하기
+- 속도는 느리지만 압축률은 더 좋다.
+bzip2 temp.tar
+
+압축해제
+bzip2 -d temp.tar.bz2
+
+압축 파일의 내용 보기
+bzcat <압축 파일 이름>
+
+압축 풀기
+bunzip2 <압축 파일 이름>
+
+
+데비안 패키지(.deb) 확인하기
+ar
+- 아카이브를 생성하거나 수정하고 아카이브에서 파일을 추출할 때 쓰임.
+
+패키지 내용 확인
+ar tv <데비안 패키지>.deb 
+rw-r--r-- 0/0      4 Mar 19 03:40 2016 debian-binary
+rw-r--r-- 0/0   1317 Mar 19 03:40 2016 control.tar.gz
+rw-r--r-- 0/0 387332 Mar 19 03:40 2016 data.tar.xz
+
+패키지에서 파일 추출
+ar x <데비안 패키지>.deb
+
+패키지 내용
+debian-binary -> 패키지 형식의 버전
+ahnmh@ahnmh-samsung-iot:~/Downloads/test$ cat debian-binary 
+2.0
+control.tar.gz -> 패키지 설치 관련 정보
+ - control 파일 : 패키지 이름, 버전, 종류, 의존 관계에 있는 다른 패키지, 패키지 설명 정보가 포함됨.
+data.tar.xz -> 실제로 설치될 파일들을 경로와 함께 tar 파일로 묶고 압축한 것임.
+
+
+
+
+
+
+
+
+
+
+
+
+

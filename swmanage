@@ -1,0 +1,173 @@
+dpkg 명령으로 패키지 관리하기
+- APT 명령은 페도라의 yum과 동일하다.
+- 페도라의 rpm 명령은 우분투의 dpkg와 동일하다.
+
+패키지 설치 상태(설치 여부, 버전, 아키텍쳐, 설명) 확인
+ahnmh@ahnmh-amor2:~$ dpkg -l libglib2.0-0
+Desired=Unknown/Install/Remove/Purge/Hold
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+||/ Name                     Version           Architecture      Description
++++-========================-=================-=================-=====================================================
+ii  libglib2.0-0:amd64        2.40.2-0ubuntu1   amd64             GLib library of C routines
+ahnmh@ahnmh-amor2:~$ 
+
+패키지 정보 상세 보기
+ahnmh@ahnmh-amor2:~$ dpkg -s libglib2.0-0
+Package: libglib2.0-0
+Status: install ok installed
+Priority: optional
+Section: libs
+Installed-Size: 4604
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Architecture: amd64
+Multi-Arch: same
+Source: glib2.0
+Version: 2.40.2-0ubuntu1
+Replaces: libglib2.0-dev (<< 2.23.2-2)
+Depends: libc6 (>= 2.17), libffi6 (>= 3.0.4), libpcre3, libselinux1 (>= 1.32), zlib1g (>= 1:1.2.2)
+Pre-Depends: multiarch-support
+Recommends: libglib2.0-data, shared-mime-info
+Breaks: glib-networking (<< 2.33.12), gvfs (<< 1.8), libgnome-desktop-3-2 (<< 3.4.2-2), python-gi (<< 3.7.2)
+Description: GLib library of C routines
+ GLib is a library containing many useful C routines for things such
+ as trees, hashes, lists, and strings.  It is a useful general-purpose
+ C library used by projects such as GTK+, GIMP, and GNOME.
+ .
+ This package contains the shared libraries.
+Original-Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
+Homepage: http://www.gtk.org/
+
+특정 파일이 포함된 패키지 검색하기
+ahnmh@ahnmh-amor2:~$ dpkg -S /usr/include/glib-2.0/glib.h
+libglib2.0-dev: /usr/include/glib-2.0/glib.h
+
+
+패키지가 설치한 파일 목록 검색하기
+ahnmh@ahnmh-amor2:~$ dpkg -L libglib2.0-0
+/.
+/lib
+/lib/x86_64-linux-gnu
+/lib/x86_64-linux-gnu/libglib-2.0.so.0.4002.0
+/usr
+/usr/lib
+/usr/lib/x86_64-linux-gnu
+/usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0.4002.0
+/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.4002.0
+/usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0.4002.0
+/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.4002.0
+/usr/lib/x86_64-linux-gnu/gio
+/usr/lib/x86_64-linux-gnu/gio/modules
+/usr/lib/x86_64-linux-gnu/glib-2.0
+/usr/lib/x86_64-linux-gnu/glib-2.0/gio-querymodules
+/usr/lib/x86_64-linux-gnu/glib-2.0/glib-compile-schemas
+/usr/lib/x86_64-linux-gnu/glib-2.0/glib-compile-resources
+/usr/share
+/usr/share/lintian
+/usr/share/lintian/overrides
+/usr/share/lintian/overrides/libglib2.0-0
+/usr/share/doc
+/usr/share/doc/libglib2.0-0
+/usr/share/doc/libglib2.0-0/README.gz
+/usr/share/doc/libglib2.0-0/NEWS.pre-1-3.gz
+/usr/share/doc/libglib2.0-0/NEWS.gz
+/usr/share/doc/libglib2.0-0/copyright
+/usr/share/doc/libglib2.0-0/AUTHORS
+/usr/share/doc/libglib2.0-0/changelog.Debian.gz
+/usr/share/glib-2.0
+/usr/share/glib-2.0/schemas
+/lib/x86_64-linux-gnu/libglib-2.0.so.0
+/usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0
+/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0
+/usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0
+/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0
+
+
+패키지의 파일 목록 검색하기
+- .deb 파일이 가지고 있는 내용을 출력함.
+ahnmh@ahnmh-amor2:~$ dpkg -c gnome-calculator_3.18.3-0ubuntu1_amd64.deb 
+...
+lrwxrwxrwx root/root         0 2016-02-04 01:00 ./usr/share/help/sv/gnome-calculator/complex.page -> ../../../help-langpack/sv/gnome-calculator/complex.page
+lrwxrwxrwx root/root         0 2016-02-04 01:00 ./usr/share/help/sv/gnome-calculator/legal.xml -> ../../../help-langpack/sv/gnome-calculator/legal.xml
+lrwxrwxrwx root/root         0 2016-02-04 01:00 ./usr/share/help/sv/gnome-calculator/logarithm.page -> ../../../help-langpack/sv/gnome-calculator/logarithm.page
+...
+
+
+
+패키지 설치하기(gnome-calculator)
+ahnmh@ahnmh-amor2:~$ dpkg -i gnome-calculator_3.18.3-0ubuntu1_amd64.deb 
+dpkg: error: requested operation requires superuser privilege
+ahnmh@ahnmh-amor2:~$ sudo dpkg -i gnome-calculator_3.18.3-0ubuntu1_amd64.deb 
+(Reading database ... 221781 files and directories currently installed.)
+Preparing to unpack gnome-calculator_3.18.3-0ubuntu1_amd64.deb ...
+Unpacking gnome-calculator (1:3.18.3-0ubuntu1) over (1:3.10.3-0ubuntu0.1.1) ...
+dpkg: dependency problems prevent configuration of gnome-calculator:
+ gnome-calculator depends on libgtk-3-0 (>= 3.16.2); however:
+  Version of libgtk-3-0:amd64 on system is 3.10.8-0ubuntu1.6.
+ gnome-calculator depends on libgtksourceview-3.0-1 (>= 3.15.1); however:
+  Version of libgtksourceview-3.0-1:amd64 on system is 3.10.2-0ubuntu1.
+ gnome-calculator depends on libmpfr4 (>= 3.1.3); however:
+  Version of libmpfr4:amd64 on system is 3.1.2-1.
+
+dpkg: error processing package gnome-calculator (--install):
+ dependency problems - leaving unconfigured
+Processing triggers for gnome-menus (3.10.1-0ubuntu2) ...
+Processing triggers for desktop-file-utils (0.22-1ubuntu1) ...
+Processing triggers for bamfdaemon (0.5.1+14.04.20140409-0ubuntu1) ...
+Rebuilding /usr/share/applications/bamf-2.index...
+Processing triggers for mime-support (3.54ubuntu1.1) ...
+Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+Processing triggers for libglib2.0-0:amd64 (2.40.2-0ubuntu1) ...
+Errors were encountered while processing:
+ gnome-calculator
+-> 설치 중에 에러가 발생. 몇몇 의존 라이브러리들의 버전이 설치할때 필요한 버전보다 낮음.
+
+
+ahnmh@ahnmh-amor2:~$ sudo dpkg -i gnome-calculator_3.10.3-0ubuntu0.1.1_amd64.deb 
+dpkg: warning: downgrading gnome-calculator from 1:3.18.3-0ubuntu1 to 1:3.10.3-0ubuntu0.1.1
+(Reading database ... 221787 files and directories currently installed.)
+Preparing to unpack gnome-calculator_3.10.3-0ubuntu0.1.1_amd64.deb ...
+Unpacking gnome-calculator (1:3.10.3-0ubuntu0.1.1) over (1:3.18.3-0ubuntu1) ...
+Setting up gnome-calculator (1:3.10.3-0ubuntu0.1.1) ...
+Processing triggers for libglib2.0-0:amd64 (2.40.2-0ubuntu1) ...
+Processing triggers for gnome-menus (3.10.1-0ubuntu2) ...
+Processing triggers for desktop-file-utils (0.22-1ubuntu1) ...
+Processing triggers for bamfdaemon (0.5.1+14.04.20140409-0ubuntu1) ...
+Rebuilding /usr/share/applications/bamf-2.index...
+Processing triggers for mime-support (3.54ubuntu1.1) ...
+Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+ahnmh@ahnmh-amor2:~$ gnome-calculator 
+-> 예전버전으로 설치시 정상 설치됨.
+
+ahnmh@ahnmh-amor2:~$ dpkg -s gnome-calculator 
+Package: gnome-calculator
+Status: install ok installed
+Priority: optional
+Section: math
+Installed-Size: 2032
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Architecture: amd64
+Version: 1:3.10.3-0ubuntu0.1.1
+Replaces: gcalctool (<< 6.7)
+Depends: libatk1.0-0 (>= 1.12.4), libc6 (>= 2.14), libglib2.0-0 (>= 2.31.18), libgtk-3-0 (>= 3.3.16), libpango-1.0-0 (>= 1.14.0), libxml2 (>= 2.7.4), dconf-gsettings-backend | gsettings-backend
+Recommends: yelp, gvfs, gnome-icon-theme
+Breaks: gcalctool (<< 6.7)
+Description: GNOME desktop calculator
+ gcalctool is a powerful graphical calculator with financial, logical and
+ scientific modes. It uses a multiple precision package to do its arithmetic
+ to give a high degree of accuracy.
+Homepage: https://live.gnome.org/Calculator
+Original-Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
+
+패키지 삭제하기
+sudo dpkg -r <패키지 이름> : 설치된 패키지만 삭제함.
+sudo dpkg -P <패키지 이름> : 패키지와 설정 정보 모두 삭제함.
+
+
+.deb 파일 풀기
+ahnmh@ahnmh-amor2:~$ mkdir calculotor
+ahnmh@ahnmh-amor2:~$ sudo dpkg -x gnome-calculator_3.10.3-0ubuntu0.1.1_amd64.deb calculotor/
+
+
+
+

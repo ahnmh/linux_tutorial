@@ -1,0 +1,46 @@
+키 생성
+ssh-keygen
+cd ~/.ssh/
+
+아래 공개키를 github에 추가하낟.
+cat id_rsa.pub 
+
+ssh로 서버(GitHub) 접근 확인
+  174  ssh -T git@github.com
+
+origin은 기본적으로 생성되고,
+
+ssh 로 원격 저장소 이름 추가(위치는 origin이랑 같음)
+git remote -v
+ahnmh@ahnmh-hp:~/workspace/linuxapi$ git remote -v
+origin	https://github.com/ahnmh/linuxapi.git (fetch)
+origin	https://github.com/ahnmh/linuxapi.git (push)
+
+git remote add linuxapi git@github.com:ahnmh/linuxapi.git
+git remote -v
+ahnmh@ahnmh-hp:~/workspace/linuxapi$ git remote -v
+linuxapi	git@github.com:ahnmh/linuxapi.git (fetch)
+linuxapi	git@github.com:ahnmh/linuxapi.git (push)
+origin	https://github.com/ahnmh/linuxapi.git (fetch)
+origin	https://github.com/ahnmh/linuxapi.git (push)
+
+이제 linuxapi 이름으로 push 할 수 있고 이 때 ssh 방식이기 때문에 id / pwd 확인 절차가 없어짐.
+git push linuxapi master
+
+git config --list
+ahnmh@ahnmh-hp:~/workspace/linuxapi$ git config --list
+user.name=ahnmh
+user.email=hiro798@naver.com
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+remote.origin.url=https://github.com/ahnmh/linuxapi.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.master.remote=origin
+branch.master.merge=refs/heads/master
+color.ui=true
+remote.linuxapi.url=git@github.com:ahnmh/linuxapi.git
+remote.linuxapi.fetch=+refs/heads/*:refs/remotes/linuxapi/*
+
+

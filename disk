@@ -1,0 +1,165 @@
+
+ahnmh@ahnmh-amor2:~$ cat /etc/fstab
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sda1 during installation
+UUID=10a78ec0-ecb5-4c92-bd76-86bf330d79ff /               ext4    errors=remount-ro 0       1
+# swap was on /dev/sda5 during installation
+UUID=e2a5e11a-109b-43a2-ae81-0cc99635d1d4 none            swap    sw              0       0
+
+
+
+ahnmh@ahnmh-amor2:~$ ls -l /dev/disk/by-uuid/
+total 0
+lrwxrwxrwx 1 root root 10  3월 18 19:49 10a78ec0-ecb5-4c92-bd76-86bf330d79ff -> ../../sda1
+lrwxrwxrwx 1 root root 10  3월 24 09:23 76F2-12CB -> ../../sdb1
+lrwxrwxrwx 1 root root 10  3월 18 19:49 e2a5e11a-109b-43a2-ae81-0cc99635d1d4 -> ../../sda5
+ahnmh@ahnmh-amor2:~$ 
+
+
+ahnmh@ahnmh-amor2:~$ mount
+/dev/sda1 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+none on /sys/fs/pstore type pstore (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
+gvfsd-fuse on /run/user/1000/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=ahnmh)
+/dev/sdb1 on /media/ahnmh/76F2-12CB type vfat (rw,nosuid,nodev,uid=1000,gid=1000,shortname=mixed,dmask=0077,utf8=1,showexec,flush,uhelper=udisks2)
+gvfsd-fuse on /home/ahnmh/.gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev)
+
+ahnmh@ahnmh-amor2:~$ cat /etc/mtab
+/dev/sda1 / ext4 rw,errors=remount-ro 0 0
+proc /proc proc rw,noexec,nosuid,nodev 0 0
+sysfs /sys sysfs rw,noexec,nosuid,nodev 0 0
+none /sys/fs/cgroup tmpfs rw 0 0
+none /sys/fs/fuse/connections fusectl rw 0 0
+none /sys/kernel/debug debugfs rw 0 0
+none /sys/kernel/security securityfs rw 0 0
+udev /dev devtmpfs rw,mode=0755 0 0
+devpts /dev/pts devpts rw,noexec,nosuid,gid=5,mode=0620 0 0
+tmpfs /run tmpfs rw,noexec,nosuid,size=10%,mode=0755 0 0
+none /run/lock tmpfs rw,noexec,nosuid,nodev,size=5242880 0 0
+none /run/shm tmpfs rw,nosuid,nodev 0 0
+none /run/user tmpfs rw,noexec,nosuid,nodev,size=104857600,mode=0755 0 0
+none /sys/fs/pstore pstore rw 0 0
+binfmt_misc /proc/sys/fs/binfmt_misc binfmt_misc rw,noexec,nosuid,nodev 0 0
+systemd /sys/fs/cgroup/systemd cgroup rw,noexec,nosuid,nodev,none,name=systemd 0 0
+gvfsd-fuse /run/user/1000/gvfs fuse.gvfsd-fuse rw,nosuid,nodev,user=ahnmh 0 0
+/dev/sdb1 /media/ahnmh/76F2-12CB vfat rw,nosuid,nodev,uid=1000,gid=1000,shortname=mixed,dmask=0077,utf8=1,showexec,flush,uhelper=udisks2 0 0
+gvfsd-fuse /home/ahnmh/.gvfs fuse.gvfsd-fuse rw,nosuid,nodev 0 0
+ahnmh@ahnmh-amor2:~$ 
+
+USB 장치를 마운트 하는 경우
+ahnmh@ahnmh-amor2:~$ sudo mount /dev/sdb1 /mnt
+마운트 위치는 /mnt 디렉토리 대신에 작업에 필요한 다른 디렉토리를 지정할 수 있다.
+하드디스크나 USB 메모리 장치 이름(/dev/sdb1)은 시스템에 장착된 장치의 종류나 갯수에 의해 달라진다.
+
+
+fdisk -l
+시스템 연결된 저장 장치의 장치명 확인
+ahnmh@ahnmh-amor2:~$ sudo fdisk -l
+...
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1              32    30031249    15015609    c  W95 FAT32 (LBA)
+---> USB 외장 메모리인 경우
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdc1            8192    62521343    31256576    c  W95 FAT32 (LBA)
+---> SD 카드인 경우
+
+
+마운트되는 외장 디스크의 마운트 포인트는 /media 폴더 안에 있음.
+
+df -h
+: 파일 시스템의 사용량에 대한 정보를 출력
+ahnmh@ahnmh-samsung-iot:/media/ahnmh$ df -Th
+시스템 장치명 	타입	크기	사용량	남은 용량	사용율	마운트 포인트
+Filesystem     Type      Size  Used Avail Use% Mounted on
+udev           devtmpfs  1.9G  4.0K  1.9G   1% /dev
+tmpfs          tmpfs     376M  1.3M  374M   1% /run
+/dev/sda5      ext4      229G  6.9G  210G   4% /
+none           tmpfs     4.0K     0  4.0K   0% /sys/fs/cgroup
+none           tmpfs     5.0M     0  5.0M   0% /run/lock
+none           tmpfs     1.9G  152K  1.9G   1% /run/shm
+none           tmpfs     100M   68K  100M   1% /run/user
+/dev/sda3      fuseblk    29G  9.6G   20G  34% /media/ahnmh/0A3CDBA53CDB8A59
+
+du 
+하위 디렉토리 포함 현재 디렉토리의 사용량
+ahnmh@ahnmh-samsung-iot:~$ du workspace/Hello/
+1204	workspace/Hello/Debug
+1304	workspace/Hello/
+ahnmh@ahnmh-samsung-iot:~$ 
+
+du -s
+전체 사용량만 출력
+ahnmh@ahnmh-samsung-iot:~$ du -s workspace/Hello/
+1304	workspace/Hello/
+ahnmh@ahnmh-samsung-iot:~$ 
+
+파일 시스템 검사
+ahnmh@ahnmh-samsung-iot:~$ sudo fsck /dev/sda3
+fsck from util-linux 2.20.1
+fsck: fsck.ntfs: not found
+fsck: error 2 while executing fsck.ntfs for /dev/sda3
+---> fsck.ntfs(윈도우 파일 시스템)은 검사 불가
+
+ahnmh@ahnmh-samsung-iot:~$ sudo e2fsck -f /dev/sda5
+e2fsck 1.42.9 (4-Feb-2014)
+/dev/sda5 is mounted.
+e2fsck: Cannot continue, aborting.
+
+파일 시스템을 점검할 때는 해당 파일 시스템의 마운트를 해제하고 해야하며 그렇지 않은 경우 오류가 발생할 수 있음.
+
+배드블록 확인
+ahnmh@ahnmh-samsung-iot:~$ sudo badblocks -v /dev/sda2
+Checking blocks 0 to 347583566
+Checking for bad blocks (read-only test): 
+
+백업 수퍼블록을 이용해 파일 시스템 복구
+1. 위치 파악
+ahnmh@ahnmh-samsung-iot:~$ sudo ahnmh@ahnmh-samsung-iot:~$ sudo dumpe2fs /dev/sda5|grep superblock
+dumpe2fs 1.42.9 (4-Feb-2014)
+  Primary superblock at 0, Group descriptors at 1-15
+  Backup superblock at 32768, Group descriptors at 32769-32783
+  Backup superblock at 98304, Group descriptors at 98305-98319
+  Backup superblock at 163840, Group descriptors at 163841-163855
+  Backup superblock at 229376, Group descriptors at 229377-229391
+  Backup superblock at 294912, Group descriptors at 294913-294927
+  Backup superblock at 819200, Group descriptors at 819201-819215
+  Backup superblock at 884736, Group descriptors at 884737-884751
+  Backup superblock at 1605632, Group descriptors at 1605633-1605647
+  Backup superblock at 2654208, Group descriptors at 2654209-2654223
+  Backup superblock at 4096000, Group descriptors at 4096001-4096015
+  Backup superblock at 7962624, Group descriptors at 7962625-7962639
+  Backup superblock at 11239424, Group descriptors at 11239425-11239439
+  Backup superblock at 20480000, Group descriptors at 20480001-20480015
+  Backup superblock at 23887872, Group descriptors at 23887873-23887887
+dumpe2fs /dev/sda5|grep superblock
+  primary 수퍼블록 1개, 백업 수퍼블록 14개로 나타나며 이중 1개를 사용해서 복구할 수 있음.
+
+2. 복구는 fsck의 -b옵션을 사용함.
+sudo fsck -b 32768 -y /dev/sda5
+ -> 백업 수퍼블록중 32768을 사용하며 복구 과정에서 질문이 나오면 모두 yes로 처리함.
+
+
+
+
+
+
