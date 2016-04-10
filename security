@@ -1,0 +1,152 @@
+시스템 로그
+/var/log
+
+주요 로그 파일
+boot.log: 부팅 시 서비스 데몬의 실행 상태를 기록
+apt/: apt-get 명령으로 패키지를 설치하고 삭제한 로그
+auth.log: telnet, ssh, su, sudo 등의 사용자 로그인 인증을 기록
+dmesg: 시스템이 부팅할 때 생성한 로그
+lastlog: 각 계정의 가장 최근 로그인 정보를 기록. lastlog 명령으로 확인 가능함.
+wtmp: 로그인 기록. last 명령으로 확인 가능함.
+syslog: syslog가 생성하는 공통 로그
+ufw.log: 방화벽이 사용하는 로그
+
+
+로그 관리 데몬
+- rsyslogd 데몬
+- 로그 기록 설정 파일: /etc/rsyslog.d/50-default.conf
+
+GUI 도구
+$ gnome-system-log
+
+
+
+방화벽 관리
+1. 동작 확인
+$ sudo ufw status
+
+2. 시작 / 종료
+$ sudo ufw enable
+$ sudo ufw disable
+
+3. 규칙 추가하기(허용/거부)
+$ sudo ufw allow ssh
+$ sudo ufw allow http
+$ sudo ufw deny telnet
+$ sudo ufw allow rpc
+$ sudo ufw allow nfs
+$ sudo ufw allow from 192.168.0.2 to any port http
+$ sudo ufw allow from 192.168.0.2 to any port ftp
+$ sudo ufw status
+Status: active
+To                         Action      From
+--                         ------      ----
+22                         ALLOW       Anywhere
+80                         ALLOW       Anywhere
+23/tcp                     DENY        Anywhere
+530/tcp                    ALLOW       Anywhere
+2049                       ALLOW       Anywhere
+21/tcp                     ALLOW       192.168.0.2
+80                         ALLOW       192.168.0.2
+22 (v6)                    ALLOW       Anywhere (v6)
+80 (v6)                    ALLOW       Anywhere (v6)
+23/tcp (v6)                DENY        Anywhere (v6)
+530/tcp (v6)               ALLOW       Anywhere (v6)
+2049 (v6)                  ALLOW       Anywhere (v6)
+ : tcp 5000포트 추가하기
+ $ sudo ufw allow 5000/tcp
+ 
+4. 규칙 삭제
+$ sudo ufw delete telnet
+
+5. GUI 도구
+$ sudo apt-get install gufw
+
+
+
+
+
+
+NMAP 포트 스캔 도구
+1. 설치 
+$ sudo apt-get install nmap
+
+2. 옵션
+-sT: TCP 스캔
+-sP: ping을 스캔
+-sU: UDP 스캔
+-sO: IP 프로토콜을 스캔
+-O: 운영체제 확인
+-v: 스캔 결과를 상세하게 출력
+-p <포트번호> : 지정한 포트만 스캔 ex) -p22 / -p1-65535
+-F: 빠른모드(기본스캔보다 적은 수의 포트만 스캔)
+
+3. 사용
+: 로컬확인
+$ nmap localhost 
+Starting Nmap 6.40 ( http://nmap.org ) at 2016-04-10 22:15 KST
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00047s latency).
+Not shown: 995 closed ports
+PORT     STATE SERVICE
+22/tcp   open  ssh
+111/tcp  open  rpcbind
+631/tcp  open  ipp
+2049/tcp open  nfs
+3689/tcp open  rendezvous
+
+: 로컬 UDP 확인
+$ sudo nmap -sU -v localhost
+Starting Nmap 6.40 ( http://nmap.org ) at 2016-04-10 22:28 KST
+Initiating UDP Scan at 22:28
+Scanning localhost (127.0.0.1) [1000 ports]
+Discovered open port 111/udp on 127.0.0.1
+Discovered open port 2049/udp on 127.0.0.1
+Completed UDP Scan at 22:28, 3.08s elapsed (1000 total ports)
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000037s latency).
+Not shown: 995 closed ports
+PORT     STATE         SERVICE
+68/udp   open|filtered dhcpc
+111/udp  open          rpcbind
+631/udp  open|filtered ipp
+996/udp  open|filtered vsinet
+2049/udp open          nfs
+
+Read data files from: /usr/bin/../share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 3.17 seconds
+           Raw packets sent: 1072 (30.829KB) | Rcvd: 2137 (91.252KB)
+
+: 원격 확인
+$ sudo nmap -O 192.168.0.2
+Starting Nmap 6.40 ( http://nmap.org ) at 2016-04-10 22:18 KST
+Nmap scan report for 192.168.0.2
+Host is up (0.0048s latency).
+All 1000 scanned ports on 192.168.0.2 are closed (846) or filtered (154)
+MAC Address: E0:2A:82:3F:E6:9D (Universal Global Scientific Industrial Co.)
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: firewall
+Running: HID embedded
+OS CPE: cpe:/h:hid:edgeplus_solo_es400
+OS details: HID EdgePlus Solo ES400 firewall
+...
+
+
+: 전체 네트워크 대상으로 포트 스캔
+$ sudo nmap -sT -O -v 192.168.0.0/24
+Starting Nmap 6.40 ( http://nmap.org ) at 2016-04-10 22:20 KST
+Initiating ARP Ping Scan at 22:20
+Scanning 255 hosts [1 port/host]
+Completed ARP Ping Scan at 22:20, 6.41s elapsed (255 total hosts)
+Initiating Parallel DNS resolution of 255 hosts. at 22:20
+Completed Parallel DNS resolution of 255 hosts. at 22:20, 0.01s elapsed
+Nmap scan report for 192.168.0.0 [host down]
+Nmap scan report for 192.168.0.3 [host down]
+...
+
+
+
+
+vi
+Shift + # -> 검색
+

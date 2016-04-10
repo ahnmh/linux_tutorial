@@ -1,0 +1,88 @@
+
+NFS(network file system)
+- 네트워크를 통해 다른 시스템의 디스크를 연결하여 사용하는 것.(폴더 공유)
+- 서버에서 공유한 디렉토리를 클라이언트에서 마운트해서 접근한다.
+
+서버 설정
+1. 설치
+$ sudo apt-get install nfs-common nfs-kernel-server rpcbind 
+
+2. 설정
+공유하고자 하는 파일을 생성한다.
+$ sudo mkdir /home/share
+$ sudo chmod 707 /home/share
+/etc/exports 에 클라이언트 정보를 등록한다.
+와일드카드를 허용하므로 같은 도메인에 있는 클라이언트들을 위해 아래와 같이 설정할 수 있다.
+#rw는 읽기/쓰기를 허용함을 의미
+/home/share 192.168.0.*(rw)
+
+3. 서버 시작
+$ sudo /etc/init.d/nfs-kernel-server restart
+ : rpcbind, rpc.statd, rpc.idmapd, rpc.mountd 와 같은 프로세스들을 확인할 수 있다.
+
+4. 서버 확인
+$ sudo exportfs -v
+/home/ahnmh/share
+		192.168.0.*(rw,wdelay,root_squash,no_subtree_check,sec=sys,rw,root_squash,no_all_squash)
+
+클라이언트 설정
+1. 설치
+$ sudo apt-get install nfs-common
+
+2. NFS 마운트
+서버주소가 192.168.0.6일 때,
+$ mount -t nfs 192.168.0.6:/home/share /mnt
+ : 이후 df 명령으로 마운트 여부를 확인할 수 있다.
+ : 부팅할 때 NFS 서버의 디렉토리를 계속 마운트하려면 /etc/fstab 파일을 수정한다.
+ 192.168.0.6:/home/share /mnt	/nfs	fg,soft	1 2
+ 
+3. 서버의 공유 내용 확인
+$ showmount -e 192.168.0.6
+ 
+ 
+ 
+ 
+Samba : 리눅스에서 윈도우 폴더 공유하기
+1. 윈도우 시스템에서 공유 폴더를 만든다.
+ - 공유 폴더 이름을 share와 같이 지정하고,
+ - 공유 폴더의 사용자에 Everyone을 Read/Write로 추가한다.
+ - 사용자 계정 root를 추가하고 패스워드 1qaz2wsx를 지정한다.
+ - 테스트 용도로 test.txt 파일을 하나 생성한다.
+ 
+2. 리눅스 설정
+: 공유한 윈도우의 자원 확인
+$ smbclient -L 192.168.0.2 
+Domain=[TEST-PC] OS=[Windows 7 Professional 7601 Service Pack 1] Server=[Windows 7 Professional 6.1]
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	ADMIN$          Disk      Remote Admin
+	C$              Disk      Default share
+	D$              Disk      Default share
+	IPC$            IPC       Remote IPC
+	share           Disk      
+	Users           Disk  
+...
+
+: 공유 폴더 접속
+$ smbclient //192.168.0.2/share -U root%1qaz2wsx
+Domain=[TEST-PC] OS=[Windows 7 Professional 7601 Service Pack 1] Server=[Windows 7 Professional 6.1]
+smb: \> dir
+  .                                   D        0  Sun Apr 10 17:35:38 2016
+  ..                                  D        0  Sun Apr 10 17:35:38 2016
+  test.txt                            A       23  Sun Apr 10 17:35:47 2016
+
+		42429 blocks of size 8388608. 27675 blocks available
+
+
+3. 공유 폴더를 마운트하기
+$ sudo mount -t cifs //192.168.0.2/share -o username=root,password=1qaz2wsx /mnt/share_win
+$ ls -l /mnt/share_win/
+total 1
+-rwxr-xr-x 1 root root 23 Apr 10 17:35 test.txt
+
+ * /etc/fstab 파일에 해당 내용을 추가하면 부팅할 때마다 마운트 시킬 수 있다.
+
+
+ 
+
