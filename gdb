@@ -21,19 +21,41 @@ i variables : 전역변수
 b(breakpoint) <Line>
 b <function name>
  : set break
-	다른 파일인 경우, 파일 이름을 따옴표를 써서 감싼 후,
-	b '<file.c>'::<function name>
+b file.c:function name : 다른 파일에 있는 함수인 경우
 b 226 : 소스 줄 번호로 설정(l <function name> 으로 줄 번호 확인한 다음 해당 줄번호로 설정하면 됨)
 b 10 if var == 0  //var 변수의 값이 0일때 10번 행에 설정
+b source/bed.c:35 : 현재 워킹 디렉토리가 아닌 폴더에 있는 경우, 경로를 지정함. :35는 35번째 줄에 break를 건다.
+* 컨디션에는 함수도 올 수 있다. 예를 들면, 
+b myfunc if strlen(mystring) == 0
+* 컨디션은 나중에 추가할 수도 있다.
+cond(condition) 8 i == 456 : break 번호 8은 i = 456일때 hit되게 함.
+cond 8 : 해당 8 break의 컨디션을 제거함.
 info b : list of all break
 d : delete all break
 d n : delete break number n
-disable b 1 3 : 1,3번 break 비활성화
-enable b 1 3 : 1,3번 break 비활성화
-cond(condition) 8 i == 456 : break 번호 8은 i = 456일때 hit되게 함.
-clear: 모든 breakpoint를 삭제함.
-clear <행 번호>: 소스 코드의 행 번호 기준으로 breakpoint를 삭제함.
+disable : 모든 break 비활성화
+disable 1 3 : 1, 3번 break 비활성화
+enable : 모든 break 활성화
+enable 1 3 : 1, 3번 break 비활성화
+clear: break를 설정할 때의 syntax를 사용해서 breakpoint를 삭제함
+clear <행 번호>
+clear <함수 이름>
+clear <파일 이름>:<함수 이름>
+commands <break number> ~ end : number에 해당하는 break가 hit될 때마다 commands ~ end로 만든 명령이 실행된다.
+Ex)
+commands 4
+>silent (silent를 추가하면 break가 hit되었다는 내용은 표시하지 않고, 아래 printf 문만 출력한다.
+>printf "index = %d\n", i
+>printf "string length = %d\n", strlen(str) 이와 같이 commands 내부에서 함수도 호출할 수도 있다.
+>continue(continue를 추가하면 continue문 commands 내부의 continue문 이전까지 수행한 다음 자동으로 프로그램 수행을 계속한다.
+>end
+ : 4번 break가 hit될때마다 printf가 실행됨. 이를 통해 소스코드에 printf 문 디버깅을 할 필요가 없어지게 됨.
 
+
+tb : 한 번만 적용되는 breakpoint
+rb : 정규 표현식을 사용해서 여러 위치에 break를 걸 수 있음.
+rb testfunc1.c:test_*
+ testfunc1.c 파일에 test_로 시작되는 모든 함수에 break를 건다. 파일 위치는 정확하게 잡아주는 것이 좋음.
 
 k(kill) : 프로그램 종료
 
@@ -43,10 +65,12 @@ n(next) : step over
 ni : 어셈블리 단위로 step over
 s <n> : 입력한 숫자만큼 진행 step into
 n <n> : 입력한 숫자만큼 진행 step over
-finish : step out
-u(until) : 현재 루프를 빠져나감
+fin(finish) : step out
+u(until) : 현재 루프를 다 돌고 빠져나감.
+u 27 : 현재 위치부터 27번째 줄까지 수행함.
 return <value> : 함수의 남은 부분을 수행하지 않고 나감. value가 있으면 해당 값을 리턴하고 나감.
 c(continue) : run to the next break
+c <n> : n번만큼 continue를 수행함. 루프안에 breake가 걸려있다면 loop를 지정한 횟수만큼 돌릴 때 유용함.
 
 
 p(print) <변수> : 변수 출력,
@@ -95,6 +119,8 @@ down : 상위 프레임(1 -> 0)으로 이동
 x 12i $pc : RIP가 현재 가르키는 위치부터 어셈블리어 12줄까지 보여줌
 
 set disassembly-flavor intel : 어셈블리 코드 형식을 Intel 형식으로 바꿔서 보여줌.
+disassemble $pc : 현재 rip 위치의 소스코드를 디스어셈블해서 보여줌.
+disassemble <함수 이름> : 해당 함수를 디스어셈블해서 보여줌.
 
 pwd : 워킹 디렉토리 보기
 
@@ -108,8 +134,13 @@ set substitute-path
 set substitute-path /media/ahnmh/76F2-12CB/api_wifi/src /home/ahnmh/workspace/api_wifi/src
 
 
+
+
 show directories
 현재 소스 코드 경로 보기
+
+directory <디렉토리> 심볼 디렉토리 추가
+file <파일> 심볼 파일 추가
 
 call <함수(파라미터1, 파라미터2, ...)>
 디버깅 중에 특정 함수를 호출해서 리턴 결과를 알 수 있다.
